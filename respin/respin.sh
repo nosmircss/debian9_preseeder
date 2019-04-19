@@ -47,6 +47,9 @@ echo preseed.cfg | cpio -H newc -o -A -F isofiles/install.amd/initrd
 /bin/rm -f ./preseed.cfg
 echo rezipping initrd....
 gzip isofiles/install.amd/initrd
+echo change boot menu to auto boot new preseed....
+sed -i 's/^timeout 0/timeout 1/' isolinux.cfg
+sed -i 's/^default vesamenu.c32/default auto/' isolinux.cfg
 echo chmod -w isofiles/install.amd....
 chmod -w -R isofiles/install.amd/
 cd isofiles
@@ -59,7 +62,7 @@ echo running isohybrid....
 isohybrid $3
 echo deleteing isofiles....
 chmod +w -R isofiles 
-/bin/rm -rf isofiles
+#/bin/rm -rf isofiles
 echo unmounting iso....
 if [ -d "/media/$USER/$isofile/" ]; then
   udevil unmount /media/$USER/$isofile
@@ -72,7 +75,3 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 exit 0
-
-
-update isolinux.cfg with 1 sec timeout
-change default line to "default auto"
