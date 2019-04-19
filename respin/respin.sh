@@ -32,7 +32,11 @@ preseedfile="$(basename -- $1)"
 echo mounting iso....
 udevil mount $2 1>/dev/null
 echo copying files....
-cp -rT /media/$USER/$isofile/ isofiles/
+if [ -d "/media/$USER/$isofile/" ]; then
+  cp -rT /media/$USER/$isofile/ isofiles/
+else
+  cp -rT /media/$isofile/ isofiles/
+fi
 chmod +w -R isofiles
 echo gunzip initrd....
 gunzip isofiles/install.amd/initrd.gz
