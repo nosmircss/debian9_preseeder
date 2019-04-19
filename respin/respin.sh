@@ -29,24 +29,36 @@ dependency_check
 
 isofile="$(basename -- $2)"
 preseedfile="$(basename -- $1)"
-udevil mount $2
+echo mounting iso....
+udevil mount $2 1>/dev/null
+echo copying files....
 cp -rT /media/$USER/$isofile/ isofiles/
-chmod +w -R isofiles/install.amd/
+chmod +w -R isofiles
+echo gunzip initrd....
 gunzip isofiles/install.amd/initrd.gz
+echo install preseed....
 /bin/cp -f $1 ./preseed.cfg
 echo preseed.cfg | cpio -H newc -o -A -F isofiles/install.amd/initrd
 /bin/rm -f ./preseed.cfg
+echo rezipping initrd....
 gzip isofiles/install.amd/initrd
+echo chmod -w isofiles/install.amd....
 chmod -w -R isofiles/install.amd/
 cd isofiles
-md5sum `find -follow -type f` > md5sum.txt
+echo md5sum....
+chmod 666 md5sum.txt && md5sum `find -follow -type f` > md5sum.txt && chmod 444 md5sum.txt
 cd ..
+echo making iso....
 genisoimage -r -J -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $3 isofiles
 isohybrid $3
-chmod +w -R isofiles
-rm -r isofiles
+echo deleteing isofiles....
+chmod +w -R isofiles && /bin/rm -rf isofiles
+echo unmounting iso....
 udevil unmount /media/$USER/$isofile
-losetup -d /dev/loop0  
+if [[ $EUID -eq 0 ]]; then
+   echo ran as root, deleteing loopback....
+   losetup -d /dev/loop0  
+fi
 
 exit 0
 
