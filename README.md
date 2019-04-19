@@ -1,5 +1,5 @@
 # debian9
-debian9 install/setup files
+debian9 install/setup files just for learning
 
 
 example command for respin
