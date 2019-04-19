@@ -48,8 +48,8 @@ echo preseed.cfg | cpio -H newc -o -A -F isofiles/install.amd/initrd
 echo rezipping initrd....
 gzip isofiles/install.amd/initrd
 echo change boot menu to auto boot new preseed....
-sed -i 's/^timeout 0/timeout 1/' isolinux.cfg
-sed -i 's/^default vesamenu.c32/default auto/' isolinux.cfg
+sed -i 's/^timeout 0/timeout 1/' isofiles/isolinux/isolinux.cfg
+sed -i 's/^default vesamenu.c32/default auto/' isofiles/isolinux/isolinux.cfg
 echo chmod -w isofiles/install.amd....
 chmod -w -R isofiles/install.amd/
 cd isofiles
