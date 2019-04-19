@@ -12,7 +12,8 @@ for i in "${deplist[@]}"
   do
     if ! [ -x "$(command -v $i)" ]; then
       echo 'Error: '$i' is not installed.' >&2
-      echo 'please install all deps apt-get install genisoimage udevil gzip md5sum' >&2
+      echo 'please install all deps' >&2 
+      echo 'sudo apt-get install genisoimage udevil gzip syslinux-utils' >&2
       exit 1
     fi
 done
