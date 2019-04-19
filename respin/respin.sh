@@ -55,11 +55,17 @@ chmod 666 md5sum.txt && md5sum `find -follow -type f` > md5sum.txt && chmod 444 
 cd ..
 echo making iso....
 genisoimage -r -J -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $3 isofiles
+echo running isohybrid....
 isohybrid $3
 echo deleteing isofiles....
-chmod +w -R isofiles && /bin/rm -rf isofiles
+chmod +w -R isofiles 
+/bin/rm -rf isofiles
 echo unmounting iso....
-udevil unmount /media/$USER/$isofile
+if [ -d "/media/$USER/$isofile/" ]; then
+  udevil unmount /media/$USER/$isofile
+else
+  udevil unmount /media/$isofile
+fi
 if [[ $EUID -eq 0 ]]; then
    echo ran as root, deleteing loopback....
    losetup -d /dev/loop0  
